@@ -20,7 +20,7 @@ app.use("/users", userRoutes)
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT;
-const __dirname=path.resolve()
+// const __dirname=path.resolve()
 mongoose
   .connect(process.env.MONGO_URL, {
     dbName: "LiveHere",
