@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    profileImage: {
+      data: Buffer,       // Binary data of the image
+      contentType: String // MIME type of the image (e.g., 'image/png', 'image/jpeg')
+    },
     tripList: {
       type: Array,
       default: [],
