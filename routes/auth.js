@@ -6,15 +6,15 @@ const multer = require("multer");
 const User = require("../models/User");
 
 /* Configuration Multer for File Upload */
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/uploads/"); // Store uploaded files in the 'uploads' folder
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); // Use the original file name
-  },
-});
-
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "public/uploads/"); // Store uploaded files in the 'uploads' folder
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname); // Use the original file name
+//   },
+// });
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 /* USER REGISTER */
@@ -31,9 +31,11 @@ router.post("/register", upload.single("profileImage"), async (req, res) => {
     }
     console.log(profileImage);
     /* path to the uploaded profile photo */
-    const profileImagePath = profileImage.path;
-    console.log(profileImage.path);
+    // const profileImagePath = profileImage.path;
+    // console.log(profileImage.path);
     /* Check if user exists */
+     const profileImageData = profileImage.buffer; // Binary data
+    const profileImageType = profileImage.mimetype;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ message: "User already exists!" });
@@ -49,7 +51,11 @@ router.post("/register", upload.single("profileImage"), async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
-      profileImagePath,
+      // profileImagePath,
+      profileImage: {
+        data: profileImageData,
+        contentType: profileImageType,
+      },
     });
 
     /* Save the new User */
